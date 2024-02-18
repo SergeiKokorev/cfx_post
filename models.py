@@ -96,6 +96,13 @@ class DomainCash:
 
         return self._cash.pop(index)
 
+    def get_interfaces(self) -> List[str]:
+        tmp = []
+        for d in self._cash:
+            for interface in d.interfaces:
+                tmp.append(interface)
+        return tmp
+
     def __str__(self):
         out = ''
         for dmn in self._cash:
