@@ -26,3 +26,7 @@ def get_data(fname: str) -> dict:
                 dmn_found = False
     
     return domains
+
+
+def save_template(*args, **kwargs):
+    pass

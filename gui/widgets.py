@@ -19,62 +19,19 @@ class Action(QAction):
         self.actionTriggered.emit(text)
 
 
-class ComboBox(QHBoxLayout):
+class ComboBox(QComboBox):
 
-    currentTextChanged = Signal(str)
-
-    def __init__(self, label, items, parent=None, **kwargs):
-        super().__init__(parent)
-        self.addWidget(QLabel(f'{label}: '))
-        self.cmb = QComboBox()
-        self.cmb.addItems(items)
-        self.cmb.currentTextChanged.connect(self.emitCurrentText)
-
-        if (object_name:=kwargs.get('object_name', None)):
-            self.cmb.setObjectName(object_name)
-        if (max_item:=kwargs.get('max_visible_items', None)):
-            self.cmb.setMaxVisibleItems(max_item)
-        if (scroll:=kwargs.get('scroll', None)):
-            self.cmb.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-
-        self.addWidget(self.cmb)
-
-    @property
-    def objectName(self):
-        return self.cmb.objectName()
-
-    @Slot(str)
-    def emitCurrentText(self, text):
-        self.currentTextChanged.emit(text)
-
-    def currentText(self) -> str:
-        return self.cmb.currentText()
-    
-    def currentIndex(self) -> int:
-        return self.cmb.currentIndex()
+    def __init__(self, items, parent=None, **kwargs):
+        super().__init__(parent, **kwargs)
+        self.addItems(items)
     
 
-class LineEdit(QHBoxLayout):
+class LineEdit(QLineEdit):
 
-    def __init__(self, title, parent=None, **kwargs):
-        super().__init__(parent)
-        
-        self.addWidget(QLabel(f'{title}: '))
-        self.editor = QLineEdit()
+    def __init__(self, regexp=None, parent=None, **kwargs):
+        super().__init__(parent, **kwargs)
 
-        if (placeholder:=kwargs.get('placeholder')):
-            self.editor.setPlaceholderText(placeholder)
-        if (object_name:=kwargs.get('object_name')):
-            self.editor.setObjectName(object_name)
-        if (reg:=kwargs.get('regexp')):
-            regexp = QRegularExpressionValidator(reg)
-            self.editor.setValidator(regexp)
-        
-        self.addWidget(self.editor)
-
-    @property
-    def objectName(self):
-        return self.editor.objectName()
-
-    def text(self):
-        return self.editor.text()
+        if regexp:
+            self.setValidator(QRegularExpressionValidator(
+                QRegularExpression(regexp)
+            ))        

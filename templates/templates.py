@@ -1,4 +1,4 @@
-from gui.editors import *
+from templates.models import *
 
 TEMPLATES = {
     'Centrifugal compressor': Centrifugal,

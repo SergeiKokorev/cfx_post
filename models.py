@@ -1,6 +1,21 @@
 from __future__ import annotations
-
+from abc import ABCMeta, abstractmethod
 from typing import Sequence
+
+
+class Cash(metaclass=ABCMeta):
+
+    @abstractmethod
+    def add(self, model):
+        pass
+
+    @abstractmethod
+    def delete(self, index: int):
+        pass
+
+    @abstractmethod
+    def get(self, index: int):
+        pass
 
 
 class Interface:
@@ -75,7 +90,7 @@ class Domain:
         return out
 
 
-class DomainCash:
+class DomainCash(Cash):
 
     _cash = []
 
@@ -87,14 +102,23 @@ class DomainCash:
 
         return True
 
-    def delete(self, idx: int) -> Domain:
+    def delete(self, index: int) -> Domain:
 
         if not isinstance(index, int):
-            raise TypeError(f'Unsupported type for domain index.')
+            raise TypeError(f'Unsupported type of domain index.')
         if index > len(self._cash):
             raise IndexError(f'Index {index} out of range. Domain axis {len(self._cash)}')
 
         return self._cash.pop(index)
+
+    def get(self, index: int):
+
+        if not isinstance(index, int):
+            raise TypeError(f'Unsupported type of domain index.')
+        if index > len(self._cash):
+            raise IndexError(f'Index {index} out of range. Domain axis {len(self._cash)}')
+        
+        return self._cash[index]
 
     def get_interfaces(self) -> List[str]:
         tmp = []

@@ -10,7 +10,7 @@ from PySide6.QtCore import Qt, Signal, Slot
 from PySide6.QtGui import QAction
 
 
-from gui.templates import TEMPLATES as tmp
+from templates.templates import TEMPLATES as tmp
 from gui.widgets import Action
 from models import DomainCash, Domain, Interface
 from tools import get_data
@@ -69,11 +69,13 @@ class App(QMainWindow):
         self.setCentralWidget(w)
 
     @Slot(str)
-    def emitTemplate(self, template):
-        editor = tmp[template](interfaces=self._domains.get_interfaces(), parent=self)
-        editor.show()
-        editor.exec()
-        print(editor.data())
+    def emitTemplate(self, key):
+        template = tmp[key]()
+        template.setModel(self._domains)
+        template.setupEditor()
+        template.editor.show()
+        template.editor.exec_()
+        print(template.editor.data())
 
     def openFile(self):
         file = QFileDialog.getOpenFileName(
